@@ -3,30 +3,34 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-pid_t r_wait(int *stat_loc) {
-   int retval;
-   while (((retval = wait(stat_loc)) == -1) && (errno == EINTR)) ;
-       return retval;
+pid_t r_wait(int* stat_loc) {
+	int retval;
+	while (((retval = wait(stat_loc)) == -1) && (errno == EINTR));
+	return retval;
 }
 
 
 void gotoxy(int x, int y)
 {
-	printf("\033[%d;%df", y, x);
-	fflush(stdout);
+	printf(" \033[%d;%df", y, x);
+	//fflush(stdout);
 }
 
 void race_start()
 {
+	if (users.at(current_login).money == 0) {
+		cout << " Charge the money. You are not allowed to participate in betting." << endl;
+		return;
+	}
 	int signal[5];
 	//show snail data
 	srand((unsigned int)time(NULL));
 
 	int charNum[5] = {
-		0,
+	   0,
 	};
 	bool checkExist[5] = {
-		false,
+	   false,
 	};
 
 	for (int i = 0; i < 5;)
@@ -38,8 +42,7 @@ void race_start()
 		{
 			checkExist[character] = true;
 			charNum[i] = character;
-			
-			Snail *babySnail = new Snail(character);
+			Snail* babySnail = new Snail(character);
 			snail[i] = babySnail;
 			++i;
 		}
@@ -47,39 +50,60 @@ void race_start()
 
 	//bet
 
-
+	system("clear");
 	for (int i = 0; i < snail.size(); i++)
 	{
-		cout << "["<<i + 1 << " 번 달팽이]" << endl;
-		cout << "무게 : " << snail[i]->weight <<endl;
-		cout << "나이 : " << snail[i]->age << endl;
+		cout << " [ Snail " << i + 1 <<" ]"<< endl;
+		cout << " Weight : " << snail[i]->weight << endl;
+		cout << " Age : " << snail[i]->age << endl;
 		string tempchar;
 		switch (snail[i]->character)
 		{
 		case 0:
-			tempchar = "성실함"; break;
+			tempchar = "Serious"; break;
 		case 1:
-			tempchar = "변덕스러움"; break;
+			tempchar = "Quirky"; break;
 		case 2:
-			tempchar = "수줍음"; break;
+			tempchar = "Bashful"; break;
 		case 3:
-			tempchar = "외로움"; break;
+			tempchar = "Lonely"; break;
 		case 4:
-			tempchar = "승부사"; break;
+			tempchar = "A matchmaker"; break;
 		default:
 			break;
 		}
-		cout << "특성 : " << tempchar << endl;
-		cout << "기본 속도 범위 : " << snail[i]->minSpeed << " ~ "<< snail[i]->maxSpeed << endl << endl;
+		cout << " Characteristic : " << tempchar << endl;
+		cout << " Default speed range : " << snail[i]->minSpeed << " ~ " << snail[i]->maxSpeed << endl << endl;
 	}
 
-	string goal;
-	cout << " 1등 달팽이는 누구? " << endl;
-	cin >> goal;
-	cout << "내가 고른 1등은 " << goal << endl;
+	int goal, goalmoney;
+	do {
+		cout << " Who's the No. 1 snail ? ▶ ";
+		cin >> goal;
+		if (goal >= 1 && goal <= 5) {
+			do {
+				cout << " Betting price ▶";
+				cin >> goalmoney;
+				if (goalmoney <= users.at(current_login).money) {
+					system("clear");
+					cout << " You bet " << goalmoney << " won on the snail [" << goal << "]" << endl;
+					break;
+				}
+				else {
+					cout << " You have" << users.at(current_login).money << "Won. Please re-enter. " << endl;
+				}
+			} while (true);
+			break;
+		}
+		else {
+			cout << " Invalid input" << endl;
+		}
+	} while (true);
+
 
 	//Clear Screen
-	system("clear");
+	
+	cout << " ▶ Let's start the snail race ! ◀" << endl;
 	// Do Fork to Make 5 Snails.
 	int snail_index = 0;
 	int pid = -1;
@@ -92,47 +116,83 @@ void race_start()
 	//내가 몇번 달팽이인지 알아야해
 	if (pid == 0)
 	{
-		Snail *s = snail[snail_index];
+		Snail* s = snail[snail_index];
 		// /* In a Race */
 		int distance = 3000;
 		int now = 1;
 		int phase = 1;
 		int show = 0;
+		int new_index = snail_index;
 		while (now < distance)
 		{
+
 			int tempSpeed = (rand() % (s->maxSpeed - s->minSpeed + 1)) + s->minSpeed;
 			now += tempSpeed; //tempSpeed 나이랑 성격 무게 계수를 곱해줘야하니까
 			//달팽이출력
-			show = (int)(now / 100);
-			gotoxy(0, snail_index + 2);
+			show = (int)(now / (distance / MAP));
+			gotoxy(0, new_index + 4);
 			for (int i = 0; i < show; i++)
 			{
 				//cout << "■";
 				cout << "~";
 			}
-			cout << "@_v" << endl;
+			cout << "@_i " << new_index+1 << endl;
 			sleep(1);
 			phase++;
+
 		}
-		exit(snail_index);
+
+		exit(new_index);
+		gotoxy(0, 15);
 	}
 	else
 	{
 		//벡터로 해서 1등 알아야됨
-		for(int i=0; i<5; i++)
+		for (int i = 0; i < 5; i++)
 			r_wait(&signal[i]);
 
 		vector<int> rank;
-		for(int i=0; i<5; i++)
+		for (int i = 0; i < 5; i++)
 			rank.push_back(WEXITSTATUS(signal[i]));
-		
+
 		/* Temporary Print */
-		for(int e : rank)
-			cout << e << " " << endl;
+		gotoxy(0, 10);
+		cout << " RANK ▶ ";
+		for (int e : rank)
+			cout << e+1 << " ";
+		cout << endl;
+
+		//결과에 따라서 상금지금 or 그냥 아웃
+		cout << " Your prediction ▶ " << goal << endl;
+		cout << " No. 1 Snail ▶ " << rank[0]+1 << endl;
+		if (goal == rank[0]) {
+			cout << " Win! You got " << goalmoney * 2 << " Won!" << endl;
+			users.at(current_login).money += goalmoney * 2;
+		}
+		else {
+			cout << " Lose! You lost " << goalmoney << " Won!" << endl;
+			users.at(current_login).money -= goalmoney;
+		}
+		cout << endl;
+	}
+	users.at(current_login).money *= 2;
+
+	//save data
+	FILE* fp2;
+	fp2 = fopen("./userinfo.txt", "w");
+	if (fp2 == NULL) {
+		printf(" fail to save \n");
+	}
+	for (int i = 0; i < users.size(); i++) {
+		string m = to_string(users.at(i).money);
+		string temp = users.at(i).name + "\n" + users.at(i).password + "\n" + m + "\n" + users.at(i).record;
+		const char* name = temp.c_str();
+		fwrite(name, 1, temp.size(), fp2);
 	}
 
+	fclose(fp2);
 	//  /* Delete Snail Info */
-	 for(int i=0; i<5; i++)
-	  delete snail[i];
+	for (int i = 0; i < 5; i++)
+		delete snail[i];
 	return;
 }

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <fstream>
 
 #include <unistd.h>
 
@@ -24,4 +25,4 @@ extern int current_login;
 extern vector<Snail*> snail;
 
 void race_start();
-void loadFile(FILE *fp);
+void loadFile(ifstream fp);

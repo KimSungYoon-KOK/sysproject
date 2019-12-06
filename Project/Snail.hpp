@@ -1,25 +1,39 @@
+#include <time.h>
+#include <stdlib.h>
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
 class Snail
 {
 public:
-	Snail() {};
+	Snail() {	};
 	~Snail() {};
+	int index;
 
 	int weight;						//��� ��					
 	int age;							//��� ��
 	int minSpeed, maxSpeed;		//�� �� ��
 	int character;			
 	
-	bool sincerity_flag = false;
-	bool shy_flag = false;
-	bool lonely_flag = false;
-	bool adventure_flag = false;
+	bool sincerity_flag ;
+	bool shy_flag ;
+	bool lonely_flag ;
+	bool adventure_flag ;
 
 	Snail(int character)
 		:character(character)
 	{		
+
+		this->sincerity_flag = false;
+		this->shy_flag = false;
+		this->lonely_flag = false;
+		this->adventure_flag = false;
+
 		weight = (rand() % 20) + 1;		//1kg ~ 20kg
 		age = (rand() % 5) + 1;				//1years ~ 5years
-		cout<<"달팽이 나이 : "<<age<<endl;
+		//cout<<"달팽이 나이 : "<<age<<endl;
 		minSpeed = 50-(weight*age/4);		// default : 50 -> 25~50
 		maxSpeed = 100-(weight*age/4);	//default : 100 -> 75~100
 
