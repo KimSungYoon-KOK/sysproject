@@ -4,27 +4,46 @@ public:
 	Snail() {};
 	~Snail() {};
 
-	int weight;					// 껍데기 무게
-	int age;					// 달팽이 나이
-	int minSpeed, maxSpeed;		// 기본 속도 범위
-	int character;				// 성격
-								/*
-								1) 성실함
-									- 초기 속도로 계쏙 뜀.
-								2) 변덕스러움
-									- 속도 범위 증가(2배)
-								3) 수줍음
-									- 처음엔 느리다.
-									- 초반 페이즈에서 속도 범위값 최대값을 감소
-								4) 외로움
-									- 양 사이드에서 뛸 때, 속도 x 1.1
-								5) 승부사
-									- 중간에 끼었을 때, 속도 증가.
-								*/
+	int weight;						//옜� 옜					
+	int age;							//옜� 옜
+	int minSpeed, maxSpeed;		//옜 옜 옜
+	int character;			
+	
+	bool sincerity_flag = false;
+	bool shy_flag = false;
+	bool lonely_flag = false;
+	bool adventure_flag = false;
 
-	Snail(int weight, int age, int minSpeed, int maxSpeed, int character)
-		: weight(weight), age(age), minSpeed(minSpeed), maxSpeed(maxSpeed), character(character)
-	{}
+	Snail(int character)
+		:character(character)
+	{
+		weight = (rand() % 20) + 1;		//1kg ~ 20kg
+		age = (rand() % 5) + 1;				//1years ~ 5years
+		minSpeed = 50-(weight*age/4);		// default : 50 -> 25~50
+		maxSpeed = 100-(weight*age/4);	//default : 100 -> 75~100
 
+		switch(character){
+			case 1:
+				//sincerity
+				sincerity_flag = true;
+				break;
+			case 2:
+				//moodiness
+				minSpeed /= 2;
+				maxSpeed *= 2;
+				break;
+			case 3:
+				//shyness
+				shy_flag = true;
+				break;
+			case 4:
+				//loneliness
+				lonely_flag = true;
+				break;
+			case 5:
+				//adventurer
+				adventure_flag = true;
+				break;
+		}
+	}
 };
-

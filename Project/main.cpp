@@ -62,7 +62,7 @@ int main(){
                     cout << "login success" << endl;
 
 					// In a menu
-					// race_start();
+					 race_start();
             }
         }
         else if(num == 2){
