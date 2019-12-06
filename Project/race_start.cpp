@@ -5,43 +5,48 @@
 void race_start()
 {
 	//show snail data
-	srand(time(0));
-	for (int i = 0; i < 5; i++)
+	srand(time(NULL));
+
+	int charNum[5] = {0, };
+	bool checkExist[5] = {false, };
+	
+	for (int i = 0; i < 5; )
 	{
 		/* Make Snail Info */
+		int character = (rand() % 5);
 
-		int weight = (rand() % 20) + 1; // 1kg ~ 20kg
-		int age = (rand() % 5) + 1; // 1years  ~ 5 years
-		int minSpeed = (rand() % 100) + 1; // 1 ~ 100
-		int maxSpeed = (rand() % (100 - minSpeed)) + minSpeed; // minSpeed ~ 100
-		int character = (rand() % 5) + 1;   // 1 ~ 5
-		Snail* babySnail = new Snail(weight, age, minSpeed, maxSpeed, character);
-		snail.push_back(babySnail);
+		if(checkExist[character] == false ){
+			checkExist[character] = true;
+			charNum[i] = character;
+			++i;
+		}
+
+		Snail* babySnail = new Snail(character);
 	}
 
-	//bet
-	for (int i = 0; i < snail.size(); i++) {
-		cout << i + 1 << "¹ø ´ŞÆØÀÌ" << endl;
-		cout << "³ªÀÌ : " << snail[i]->age << endl;
-		cout << "Æ¯¼º : " << snail[i]->character << endl;
-	}
-	//run
+	// //bet
+	// for (int i = 0; i < snail.size(); i++) {
+	// 	cout << i + 1 << "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+	// 	cout << "ï¿½ï¿½ï¿½ï¿½ : " << snail[i]->age << endl;
+	// 	cout << "Æ¯ï¿½ï¿½ : " << snail[i]->character << endl;
+	// }
+	// //run
 	
 	
-	// Do Fork to Make 5 Snails.
-	 int snail_index = 0;
-	 for(snail_index = 0; snail_index<5; snail_index++)
-	  if(fork() <= 0)
-	      break;
+	// // Do Fork to Make 5 Snails.
+	//  int snail_index = 0;
+	//  for(snail_index = 0; snail_index<5; snail_index++)
+	//   if(fork() <= 0)
+	//       break;
 
 
 
-	// /* In a Race */
-	// //
+	// // /* In a Race */
+	// // //
 
-	 /* Delete Snail Info */
-	 for(int i=0; i<5; i++)
-	  delete snail[i];
-	 return;
+	//  /* Delete Snail Info */
+	//  for(int i=0; i<5; i++)
+	//   delete snail[i];
+	//  return;
 }
 

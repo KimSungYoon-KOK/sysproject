@@ -17,11 +17,11 @@
 using namespace std;
 
 // 모든 유저의 객체, Data 저장.
-extern vector<User> user;
+extern vector<User> users;
 // 전역변수 user 중 현재 login한 User의 index. default는 -1.
 extern int current_login;
 // 모든 달팽이의 객체 저장.
 extern vector<Snail*> snail;
 
 void race_start();
-vector<User> loadFile(FILE *fp);
+void loadFile(FILE *fp);

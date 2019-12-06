@@ -1,11 +1,8 @@
 #include "before.hpp"
-
-vector<User> loadFile(FILE *fp) {
-	// fp¸¦ µû¶ó ÆÄÀÏÀ» ÄÑ¼­ °´Ã¼È­ ½ÃÄÑ¼­ ¹ÝÈ¯ÇÑ´Ù.
+void loadFile(FILE *fp) {
+	// fpï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¼ï¿½ ï¿½ï¿½Ã¼È­ ï¿½ï¿½ï¿½Ñ¼ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 	int count = 0;
 	char buf[1024];
-
-	vector<User> userV;
 
 	string name = "";
 	string password = "";
@@ -33,11 +30,9 @@ vector<User> loadFile(FILE *fp) {
 			break;
 		case 4:
 			count = -1;
-			userV.push_back(User(name, password, money, record));
+			users.push_back(User(name, password, money, record));
 			break;
 		}
 		count++;
 	}
-
-	return userV;
 }
