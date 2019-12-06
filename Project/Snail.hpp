@@ -16,10 +16,10 @@ public:
 
 	Snail(int character)
 		:character(character)
-	{
-		srand(time(NULL));		
+	{		
 		weight = (rand() % 20) + 1;		//1kg ~ 20kg
 		age = (rand() % 5) + 1;				//1years ~ 5years
+		cout<<"달팽이 나이 : "<<age<<endl;
 		minSpeed = 50-(weight*age/4);		// default : 50 -> 25~50
 		maxSpeed = 100-(weight*age/4);	//default : 100 -> 75~100
 
@@ -46,6 +46,6 @@ public:
 				adventure_flag = true;
 				break;
 		}
-		cout<< "character : "<< character <<endl;
+		//cout<< "character : "<< character <<endl;
 	}
 };

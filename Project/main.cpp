@@ -91,13 +91,13 @@ int main(){
          cin >> t1;
          cout << " pw : ";
          cin >> t2;
-         if (login(users, t1, t2)) {
-            //cout << "login success" << endl;
-            show_menu();
-         }
-         else {
-            cout << "회원 정보가 없습니다." << endl;
-         }
+            if (login(users, t1, t2)) {
+                //cout << "login success" << endl;
+                show_menu();
+            }
+            else {
+                cout << "회원 정보가 없습니다." << endl;
+            }
         }
         else if(num == 2){
             exit(0);
