@@ -19,7 +19,9 @@ void gotoxy(int x, int y)
 void race_start()
 {
 	if (users.at(current_login).money == 0) {
+		cout << "=============================================================" << endl;
 		cout << " Charge the money. You are not allowed to participate in betting." << endl;
+		cout << "=============================================================" << endl;
 		return;
 	}
 	int signal[5];
@@ -53,6 +55,7 @@ void race_start()
 	system("clear");
 	for (int i = 0; i < snail.size(); i++)
 	{
+		cout << "================================" << endl;
 		cout << " [ Snail " << i + 1 <<" ]"<< endl;
 		cout << " Weight : " << snail[i]->weight << endl;
 		cout << " Age : " << snail[i]->age << endl;
@@ -60,11 +63,11 @@ void race_start()
 		switch (snail[i]->character)
 		{
 		case 0:
-			tempchar = "Serious"; break;
+			tempchar = "Diligent"; break;
 		case 1:
-			tempchar = "Quirky"; break;
+			tempchar = "Unpredictable"; break;
 		case 2:
-			tempchar = "Bashful"; break;
+			tempchar = "Shy"; break;
 		case 3:
 			tempchar = "Lonely"; break;
 		case 4:
@@ -73,16 +76,16 @@ void race_start()
 			break;
 		}
 		cout << " Characteristic : " << tempchar << endl;
-		cout << " Default speed range : " << snail[i]->minSpeed << " ~ " << snail[i]->maxSpeed << endl << endl;
+		cout << " MIN SPEED : " << snail[i]->minSpeed << " ~ MAX SPEED : " << snail[i]->maxSpeed << endl;
 	}
-
+	cout << "================================" << endl;
 	int goal, goalmoney;
 	do {
 		cout << " Who's the No. 1 snail ? ▶ ";
 		cin >> goal;
 		if (goal >= 1 && goal <= 5) {
 			do {
-				cout << " Betting price ▶";
+				cout << "\n How much do you want to bet ? ▶ ";
 				cin >> goalmoney;
 				if (goalmoney <= users.at(current_login).money) {
 					system("clear");
@@ -103,7 +106,7 @@ void race_start()
 
 	//Clear Screen
 	
-	cout << " ▶ Let's start the snail race ! ◀" << endl;
+	cout << " ▶ Let's Start The Race ! ◀" << endl;
 	// Do Fork to Make 5 Snails.
 	int snail_index = 0;
 	int pid = -1;
@@ -125,25 +128,21 @@ void race_start()
 		int new_index = snail_index;
 		while (now < distance)
 		{
-
 			int tempSpeed = (rand() % (s->maxSpeed - s->minSpeed + 1)) + s->minSpeed;
 			now += tempSpeed; //tempSpeed 나이랑 성격 무게 계수를 곱해줘야하니까
 			//달팽이출력
 			show = (int)(now / (distance / MAP));
-			gotoxy(0, new_index + 4);
+			gotoxy(0, new_index*2 + 4);
 			for (int i = 0; i < show; i++)
 			{
-				//cout << "■";
 				cout << "~";
 			}
-			cout << "@_i " << new_index+1 << endl;
+			cout << "@_i " << new_index + 1 << endl;
 			sleep(1);
 			phase++;
 
 		}
-
 		exit(new_index);
-		gotoxy(0, 15);
 	}
 	else
 	{
@@ -156,7 +155,7 @@ void race_start()
 			rank.push_back(WEXITSTATUS(signal[i]));
 
 		/* Temporary Print */
-		gotoxy(0, 10);
+		gotoxy(0, 14);
 		cout << " RANK ▶ ";
 		for (int e : rank)
 			cout << e+1 << " ";
@@ -165,32 +164,45 @@ void race_start()
 		//결과에 따라서 상금지금 or 그냥 아웃
 		cout << " Your prediction ▶ " << goal << endl;
 		cout << " No. 1 Snail ▶ " << rank[0]+1 << endl;
-		if (goal == rank[0]) {
+		cout << "=====================================" << endl;
+		if (goal == rank[0] + 1) {
 			cout << " Win! You got " << goalmoney * 2 << " Won!" << endl;
-			users.at(current_login).money += goalmoney * 2;
+			users.at(current_login).money += goalmoney;
+			users.at(current_login).record += "1";
 		}
 		else {
 			cout << " Lose! You lost " << goalmoney << " Won!" << endl;
 			users.at(current_login).money -= goalmoney;
+			users.at(current_login).record += "0";
 		}
+		cout << "=====================================" << endl;
 		cout << endl;
 	}
 	users.at(current_login).money *= 2;
 
 	//save data
-	FILE* fp2;
-	fp2 = fopen("./userinfo.txt", "w");
-	if (fp2 == NULL) {
-		printf(" fail to save \n");
-	}
-	for (int i = 0; i < users.size(); i++) {
-		string m = to_string(users.at(i).money);
-		string temp = users.at(i).name + "\n" + users.at(i).password + "\n" + m + "\n" + users.at(i).record;
-		const char* name = temp.c_str();
-		fwrite(name, 1, temp.size(), fp2);
-	}
+	//FILE* fp2;
+	//fp2 = fopen("./userinfo.txt", "w");
+	//if (fp2 == NULL) {
+	//	printf(" fail to save \n");
+	//}
+	//for (int i = 0; i < users.size(); i++) {
+	//	string m = to_string(users.at(i).money);
+	//	string temp = users.at(i).name + "\n" + users.at(i).password + "\n" + m + "\n" + users.at(i).record+"\n";
+	//	//const char* name = temp.c_str();
+	//	fwrite(temp, 1, temp.size(), fp2);
+	//}
 
-	fclose(fp2);
+	//fclose(fp2);
+	ofstream out("./userinfo.txt");
+	if (out.is_open()) {
+		for (int i = 0; i < users.size(); i++) {
+			out << users.at(i).name << endl;
+			out << users.at(i).password << endl;
+			out << to_string(users.at(i).money) << endl;
+			out << users.at(i).record << endl;
+		}
+	}
 	//  /* Delete Snail Info */
 	for (int i = 0; i < 5; i++)
 		delete snail[i];

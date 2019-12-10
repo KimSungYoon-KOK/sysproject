@@ -44,8 +44,8 @@ public:
 				break;
 			case 1:
 				//moodiness
-				minSpeed /= 2;
-				maxSpeed *= 2;
+				minSpeed /= 1.3;
+				maxSpeed *= 1.3;
 				break;
 			case 2:
 				//shyness

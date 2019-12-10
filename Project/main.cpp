@@ -23,7 +23,7 @@ void my_page() {
 	system("clear");
 	cout << " ▶   My Page   ◀" << endl;
 	cout << " ID : " << users.at(current_login).name << endl;
-	cout << " Money : " << users.at(current_login).money << endl;
+	cout << " My Money : " << users.at(current_login).money << endl << endl;
 	cout << " < Race Record >" << endl;
 	for (int i = 0; i < users.at(current_login).record.length(); i++) {
 		cout << " Race  " << i + 1 << " : ";
@@ -46,18 +46,27 @@ void charge_money() {
 				users.at(current_login).money = charge;
 				cout <<" "<< charge << " Won charged." << endl;
 				//save data
-				FILE* fp2;
-				fp2 = fopen("./userinfo.txt", "w");
-				if (fp2 == NULL) {
-					printf(" fail to save \n");
+				//FILE* fp2;
+				//fp2 = fopen("./userinfo.txt", "w");
+				//if (fp2 == NULL) {
+				//	printf(" fail to save \n");
+				//}
+				//for (int i = 0; i < users.size(); i++) {
+				//	string m = to_string(users.at(i).money);
+				//	string temp = users.at(i).name + "\n" + users.at(i).password + "\n" + m + "\n" + users.at(i).record;
+				//	const char* name = temp.c_str();
+				//	fwrite(name, 1, temp.size(), fp2);
+				//}
+				//fclose(fp2);
+				ofstream out("./userinfo.txt");
+				if (out.is_open()) {
+					for (int i = 0; i < users.size(); i++) {
+						out << users.at(i).name << endl;
+						out << users.at(i).password << endl;
+						out << to_string(users.at(i).money) << endl;
+						out << users.at(i).record << endl;
+					}
 				}
-				for (int i = 0; i < users.size(); i++) {
-					string m = to_string(users.at(i).money);
-					string temp = users.at(i).name + "\n" + users.at(i).password + "\n" + m + "\n" + users.at(i).record;
-					const char* name = temp.c_str();
-					fwrite(name, 1, temp.size(), fp2);
-				}
-				fclose(fp2);
 				break;
 			}
 			else {
@@ -66,8 +75,11 @@ void charge_money() {
 		} while (true);
 
 	}
-	else
+	else {
+		cout << "=================================================================" << endl;
 		cout << " You can't charge. When you run out of money, you can charge it.." << endl;
+		cout << "=================================================================" << endl;
+	}
 	cout << endl;
 }
 
@@ -90,6 +102,8 @@ int main() {
 		while (!fp.eof())
 		{
 			fp.getline(buf, sizeof(buf));
+			if (buf == "")
+				break;
 			string name = buf;
 			fp.getline(buf, sizeof(buf));
 			string password = buf;
@@ -119,13 +133,14 @@ int main() {
 	{
 		int num;
 		cout << " ▶   MENU   ◀" << endl;
-		cout << " 1) Login\n 2) Exit\n" << endl;
+		cout << " 1) Login\n 2) Join\n 3) Exit\n" << endl;
 		cout << " Select Menu ▶ ";
 		cin >> num;
 		if (num == 1) {
+			system("clear");
+			cout << " ▶ Login ◀" << endl;
 			string t1;
 			string t2;
-			system("clear");
 			cout << " ID ▶ ";
 			cin >> t1;
 			cout << " PW ▶ ";
@@ -139,6 +154,39 @@ int main() {
 			}
 		}
 		else if (num == 2) {
+			system("clear");
+			cout << " ▶ Join ◀" << endl;
+			string t1;
+			string t2;
+			do {
+				cout << " ID ▶ ";
+				cin >> t1;
+				bool flag = true;
+				for (int i = 0; i < users.size(); i++) {
+					if (users.at(i).name == t1)
+						flag = false;
+				}
+				if (flag == false) {
+					cout << " This ID already taken. Please try another one !" << endl;
+					continue;
+				}
+				break;
+			} while (true);
+			cout << " PW ▶ ";
+			cin >> t2;
+			users.push_back(User(t1, t2, 0, ""));
+			cout << " Join Success !" << endl;
+			ofstream out("./userinfo.txt");
+			if (out.is_open()) {
+				for (int i = 0; i < users.size(); i++) {
+					out << users.at(i).name << endl;
+					out << users.at(i).password << endl;
+					out << to_string(users.at(i).money) << endl;
+					out << users.at(i).record << endl;
+				}
+			}
+		}
+		else if (num == 3) {
 			exit(0);
 		}
 		else {
